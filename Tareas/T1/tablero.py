@@ -12,17 +12,19 @@ class Tablero:
         
         # # atributos extras
         # self.casillas: List[List[bool]] = []  # Estado de casillas
+        self.num_fil: int = None  # Número de filas
+        self.num_col: int = None  # Número de columnas
 
     def cargar_tablero(self, archivo:str) -> None:
         path = os.path.join("config", archivo) 
         with open(path, 'r', encoding="utf-8") as file:
             # Obtenemos numero de filas y columnas
             encabezado: List[str] = file.readline().strip().split(' ')
-            num_fil: int = int(encabezado[0])
-            num_col: int = int(encabezado[1])
+            self.num_fil: int = int(encabezado[0])
+            self.num_col: int = int(encabezado[1])
             # Inicializamos todas las casillas como habilitadas
             self.casillas = [
-                [True for _ in range(num_col)] for _ in range(num_fil)
+                [True for _ in range(self.num_col)] for _ in range(self.num_fil)
             ]
             # print(self.casillas)
 
