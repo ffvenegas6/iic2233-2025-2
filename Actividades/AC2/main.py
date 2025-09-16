@@ -66,11 +66,23 @@ def descartar_animes(generos_descartados: set, animes: list) -> list:
 
 def resumen_animes_por_ver(*animes: Anime) -> dict:
     # TODO: Completar
-    return
+    if animes:
+        return {
+            "puntaje promedio": round(sum(anime.puntaje for anime in animes) / len(animes), 1),
+            "capitulos total": sum(anime.capitulos for anime in animes),
+            "generos": set().union(*(anime.generos for anime in animes)),
+        }
+    else:
+        return {
+            "puntaje promedio": 0.0,
+            "capitulos total": 0,
+            "generos": set(),
+        }
 
 
 def estudios_con_genero(genero: str, **estudios: dict) -> list:
     # TODO: Completar
+    
     return
 
 
