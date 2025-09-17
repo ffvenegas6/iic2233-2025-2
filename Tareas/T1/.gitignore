@@ -3,5 +3,6 @@ visualizador.pyc
 config/
 data/
 tests_publicos/
+tests_privados/
 README_inicial.md
 __pycache__/
