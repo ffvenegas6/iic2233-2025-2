@@ -84,7 +84,6 @@ class DCCasillas:
             print(f"Error: No se encontró el archivo o directorio - {e}")
             return False
 
-
     # Funciones extras
     def cargar_tableros(self, config_path: str) -> List[Tablero]:
         """Carga los tableros desde el archivo de configuración."""
