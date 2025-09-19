@@ -89,16 +89,24 @@ class DCCasillas:
         """Carga los tableros desde el archivo de configuración."""
         tableros: List[Tablero] = []
         path = os.path.join("config", config_path)
-        with open(path, 'r', encoding="utf-8") as file:
-            encabezado: List[str] = file.readline().strip().split(' ')
-            num_tableros: int = int(encabezado[0])
-            nombre_tableros: List[str] = file.readlines()
-            for nombre in nombre_tableros:
-                # Cargar cada tablero
-                tablero = Tablero()
-                tablero.cargar_tablero(nombre.strip())
-                tableros.append(tablero)
-        return tableros
+        try:
+            with open(path, 'r', encoding="utf-8") as file:
+                encabezado: List[str] = file.readline().strip().split(' ')
+                num_tableros: int = int(encabezado[0])
+                nombre_tableros: List[str] = file.readlines()
+                for nombre in nombre_tableros:
+                    # Cargar cada tablero
+                    tablero = Tablero()
+                    tablero.cargar_tablero(nombre.strip())
+                    tableros.append(tablero)
+            return tableros
+        except FileNotFoundError as e:
+            print(f"Error: No se encontró el archivo o directorio - {e}")
+        except IOError as e:
+            print(f"Error: Error de entrada/salida - {e}")
+        except ValueError as e:
+            print(f"Error: Formato de archivo inválido - {e}")
+        
 
 # if __name__ == "__main__":
 #     # Ejemplo de uso
