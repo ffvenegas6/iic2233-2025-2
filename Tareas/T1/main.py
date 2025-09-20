@@ -44,7 +44,9 @@ class MenuJuego:
             self.iniciar_juego()
         elif opcion == 2:
             self.continuar_juego()
-        
+        elif opcion == 3:
+            self.guardar_juego()
+
     def mostrar_menu(self) -> None:
         # Mostramos en loop mientras usuario no seleccione última opción
         while self.opcion_actual != len(self.opciones) - 1:
@@ -97,7 +99,17 @@ class MenuJuego:
         else:
             print("Opción inválida. Regresando al menú principal.")
             
-
+    def guardar_juego(self) -> None:
+        if not self.dccasillas:
+            print("No hay juego en curso. Inicie un nuevo juego primero.")
+        else:
+            print("Guardando estado de juego...")
+            success: bool = self.dccasillas.guardar_estado()
+            if success:
+                print("Estado de juego guardado exitosamente.")
+            else:
+                print("Error al guardar el estado de juego.")
+            return
 
 if __name__ == "__main__":
     menu = MenuJuego()
