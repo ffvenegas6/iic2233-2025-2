@@ -2,6 +2,14 @@ import sys
 from dccasillas import DCCasillas
 from typing import List
 
+def mostrar_opciones(encabezado: str, opciones: List[str]) -> str:
+    print("*" * 3 + f" {encabezado} " + "*" * 3 + "\n")
+    for i in range(len(opciones)):
+        print(f"[{i + 1}] {opciones[i]}")
+    msg = ("\nIndique su opción "
+            f"({', '.join(str(i + 1) for i in range(len(opciones)))}): ")
+    return msg
+
 class MenuJuego:
 
     def __init__(self) -> None:
@@ -26,13 +34,7 @@ class MenuJuego:
                    f"Puntaje: {self.dccasillas.puntaje}"))
             print("Tableros resueltos: TTT\n")
 
-        print("*" * 3 + " Menú de Juego " + "*" * 3 + "\n")
-        for i in range(len(self.opciones)):
-            print(f"[{i + 1}] {self.opciones[i]}")
-
-        msg = ("\nIndique su opción "
-              f"({', '.join(str(i + 1) for i in range(len(self.opciones)))}): ")
-        
+        msg = mostrar_opciones("Menú de Juego", self.opciones)
         opcion: int = int(input(msg))
         while opcion < 1 or opcion > len(self.opciones):
             print("\nOpción inválida. Intente nuevamente.\n")
@@ -154,14 +156,8 @@ class MenuAcciones:
             tablero = dccasillas.tableros[dccasillas.tablero_actual]
             print(f"Movimientos tablero: {tablero.movimientos}\n")
 
-        # Encabezado del menú
-        print("*" * 3 + " Menú de Acciones " + "*" * 3 + "\n")
-        for i in range(len(self.opciones)):
-            print(f"[{i + 1}] {self.opciones[i]}")
+        msg = mostrar_opciones("Menú de Acciones", self.opciones)
 
-        msg = ("\nIndique su opción "
-              f"({', '.join(str(i + 1) for i in range(len(self.opciones)))}): ")
-        
         # Pedimos opción
         opcion: int = int(input(msg))
         # Revisamos que sea válida
