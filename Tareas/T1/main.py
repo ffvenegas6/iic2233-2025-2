@@ -14,6 +14,7 @@ class MenuJuego:
             "Salir del programa"
         ]
         self.opcion_actual: int = -1
+        self.menu_acciones = MenuAcciones()
         
     def selector_opciones(self) -> int:
         print("\n¡Bienvenido a DCCasillas!\n")
@@ -77,8 +78,7 @@ class MenuJuego:
         # Seleccionamos el primer tablero
         self.dccasillas.abrir_tablero(0)
         # Pasamos al menú de acciones
-        # TODO: menú de acciones
-        print("Menú de acciones (pendiente de implementar)")
+        self.menu_acciones.selector_opciones(self.dccasillas)
         # carga_correcta = True
         # except Exception as e:
         #     print(f"Error al cargar archivo de configuración: {e}")
@@ -93,8 +93,7 @@ class MenuJuego:
             tablero: int = int(input("Ingrese el número de tablero a abrir: "))
             self.dccasillas.abrir_tablero(tablero)
             # Pasamos al menú de acciones
-            # TODO: menú de acciones
-            print("Menú de acciones (pendiente de implementar)")
+            self.menu_acciones.selector_opciones(self.dccasillas)
         elif mantener.lower() == 'n':
             # Pasamos al menú de acciones
             print("Menú de acciones (pendiente de implementar)")
@@ -127,6 +126,49 @@ class MenuJuego:
             else:
                 print("Error al recuperar el estado de juego.")
             return
+
+
+class MenuAcciones:
+    
+    def __init__(self) -> None:
+        self.opciones: List[str] = [
+            "Mostrar tablero",
+            "Habilitar/deshabilitar casilla",
+            "Verificar solución",
+            "Encontrar solución",
+            "Volver al menú de Juego"
+        ]
+        self.opcion_actual: int = -1 
+
+    def selector_opciones(self, dccasillas: None) -> int:
+        # Función para mostrar el menú de acciones
+        print("\nDCCasillas")
+        if not dccasillas:
+            print("Usuario: UUU, Puntaje: PPP")
+            print("Número de tablero: XXX de YYY")
+            print("Movimientos tablero: ppp\n")
+        else:
+            print((f"Usuario: {dccasillas.usuario}, "
+                   f"Puntaje: {dccasillas.puntaje}"))
+            print(f"Número de tablero: {dccasillas.tablero_actual} de {len(dccasillas.tableros)}")
+            tablero = dccasillas.tableros[dccasillas.tablero_actual]
+            print(f"Movimientos tablero: {tablero.movimientos}\n")
+
+        # Encabezado del menú
+        print("*" * 3 + " Menú de Acciones " + "*" * 3 + "\n")
+        for i in range(len(self.opciones)):
+            print(f"[{i + 1}] {self.opciones[i]}")
+
+        msg = ("\nIndique su opción "
+              f"({', '.join(str(i + 1) for i in range(len(self.opciones)))}): ")
+        
+        # Pedimos opción
+        opcion: int = int(input(msg))
+        # Revisamos que sea válida
+        while opcion < 1 or opcion > len(self.opciones):
+            print("\nOpción inválida. Intente nuevamente.\n")
+            opcion = int(input())
+        return opcion
 
 if __name__ == "__main__":
     menu = MenuJuego()
