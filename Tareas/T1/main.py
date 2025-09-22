@@ -3,6 +3,8 @@ from dccasillas import DCCasillas
 from tablero import Tablero
 from typing import List
 
+dccasillas: DCCasillas = None
+
 def mostrar_opciones(encabezado: str, opciones: List[str]) -> str:
     print("*" * 3 + f" {encabezado} " + "*" * 3 + "\n")
     for i in range(len(opciones)):
@@ -14,7 +16,6 @@ def mostrar_opciones(encabezado: str, opciones: List[str]) -> str:
 class MenuJuego:
 
     def __init__(self) -> None:
-        self.dccasillas: DCCasillas = None
         self.opciones: List[str] = [
             "Iniciar juego",
             "Continuar juego",
@@ -27,12 +28,12 @@ class MenuJuego:
         
     def selector_opciones(self) -> int:
         print("\n¡Bienvenido a DCCasillas!\n")
-        if not self.dccasillas:
+        if not dccasillas:
             print("Usuario: UUU, Puntaje: PPP")
             print("Tableros resueltos: TTT\n")
         else:
-            print((f"Usuario: {self.dccasillas.usuario}, "
-                   f"Puntaje: {self.dccasillas.puntaje}"))
+            print((f"Usuario: {dccasillas.usuario}, "
+                   f"Puntaje: {dccasillas.puntaje}"))
             print("Tableros resueltos: TTT\n")
         # Desplegamos opciones
         msg = mostrar_opciones("Menú de Juego", self.opciones)
@@ -74,11 +75,11 @@ class MenuJuego:
         # Pedimos el archivo de configuración
         config: str = input("Ingrese el nombre del archivo de configuración: ")
         # Creamos nueva instancia de DCCasillas
-        self.dccasillas = DCCasillas(usuario, config)
+        dccasillas = DCCasillas(usuario, config)
         # Seleccionamos el primer tablero
-        self.dccasillas.abrir_tablero(0)
+        dccasillas.abrir_tablero(0)
         # Pasamos al menú de acciones
-        self.menu_acciones.mostrar_menu(self.dccasillas)
+        self.menu_acciones.mostrar_menu()
         return
 
     def continuar_juego(self) -> None:
@@ -86,26 +87,26 @@ class MenuJuego:
             print("No hay juego en curso. Inicie un nuevo juego primero.")
             return
         # Pedimos mantener tablero actual o cambiar
-        cambiar: str = input(f"¿Desea cambiar el tablero actual [{self.dccasillas.tablero_actual}]? (y/n): ")
+        cambiar: str = input(f"¿Desea cambiar el tablero actual [{dccasillas.tablero_actual}]? (y/n): ")
         if cambiar.lower() == 'y':
             tablero: int = int(input("Ingrese el número de tablero a abrir: "))
-            self.dccasillas.abrir_tablero(tablero)
+            dccasillas.abrir_tablero(tablero)
             # Pasamos al menú de acciones
-            self.menu_acciones.mostrar_menu(self.dccasillas)
+            self.menu_acciones.mostrar_menu()
         elif cambiar.lower() == 'n':
             # Pasamos al menú de acciones
-            self.menu_acciones.mostrar_menu(self.dccasillas)
+            self.menu_acciones.mostrar_menu()
         else:
             print("Opción inválida. Regresando al menú principal.")
         return
             
     def guardar_juego(self) -> None:
-        if not self.dccasillas:
+        if not dccasillas:
             print("No hay juego en curso. Inicie un nuevo juego primero.")
             return
         else:
             print("Guardando estado de juego...")
-            success: bool = self.dccasillas.guardar_estado()
+            success: bool = dccasillas.guardar_estado()
             if success:
                 print("Estado de juego guardado exitosamente.")
             else:
@@ -113,12 +114,12 @@ class MenuJuego:
             return
 
     def recuperar_estado(self) -> None:
-        if not self.dccasillas:
+        if not dccasillas:
             print("No hay juego en curso. Inicie un nuevo juego primero.")
             return
         else:
             print("Recuperando estado de juego...")
-            success: bool = self.dccasillas.recuperar_estado()
+            success: bool = dccasillas.recuperar_estado()
             if success:
                 print("Estado de juego recuperado exitosamente.")
             else:
@@ -128,8 +129,7 @@ class MenuJuego:
 
 class MenuAcciones:
 
-    def __init__(self, dccasillas: DCCasillas) -> None:
-        self.dccasillas = dccasillas
+    def __init__(self) -> None:
         self.opciones: List[str] = [
             "Mostrar tablero",
             "Habilitar/deshabilitar casilla",
@@ -138,32 +138,19 @@ class MenuAcciones:
             "Volver al menú de Juego"
         ]
         self.opcion_actual: int = -1
-        self.usuario: str = None
-        self.puntaje: int = 0
-        self.tablero_actual: int = None
-        self.tableros: List = None
-        self.tablero: Tablero = None
-
-    def actualizar_dccasillas(self, dccasillas: DCCasillas) -> None:
-        self.dccasillas: DCCasillas = dccasillas
-        self.usuario: str = dccasillas.usuario
-        self.puntaje: int = dccasillas.puntaje
-        self.tablero_actual: int = dccasillas.tablero_actual
-        self.tableros: List = dccasillas.tableros
-        self.tablero: Tablero = dccasillas.tableros[dccasillas.tablero_actual]
 
     def selector_opciones(self) -> int:
         # Función para mostrar el menú de acciones
         print("\nDCCasillas")
-        if not self.dccasillas:
+        if not dccasillas:
             print("Usuario: UUU, Puntaje: PPP")
             print("Número de tablero: XXX de YYY")
             print("Movimientos tablero: ppp\n")
         else:
-            print((f"Usuario: {self.usuario}, "
-                   f"Puntaje: {self.puntaje}"))
-            print(f"Número de tablero: {self.tablero_actual} de {len(self.tableros)}")
-            print(f"Movimientos tablero: {self.tablero.movimientos}\n")
+            print((f"Usuario: {dccasillas.usuario}, "
+                   f"Puntaje: {dccasillas.puntaje}"))
+            print(f"Número de tablero: {dccasillas.tablero_actual} de {len(dccasillas.tableros)}")
+            print(f"Movimientos tablero: {dccasillas.tablero.movimientos}\n")
         # Desplegamos opciones
         msg = mostrar_opciones("Menú de Acciones", self.opciones)
         opcion: int = int(input(msg))
@@ -173,9 +160,7 @@ class MenuAcciones:
             opcion = int(input())
         return opcion
 
-    def mostrar_menu(self, dccasillas: DCCasillas) -> None:
-        # Actualizamos dccasillas
-        self.actualizar_dccasillas(dccasillas)
+    def mostrar_menu(self) -> None:
         # Mostramos en loop mientras usuario no seleccione última opción
         while self.opcion_actual != len(self.opciones) - 1:
             opcion = self.selector_opciones()
@@ -196,30 +181,44 @@ class MenuAcciones:
             self.encontrar_solucion()
 
     def mostrar_tablero(self) -> None:
-        self.tablero.mostrar_tablero()
+        tablero = dccasillas.tableros[dccasillas.tablero_actual]
+        tablero.mostrar_tablero()
         return
     
     def cambiar_casillas(self) -> None:
+        # Pedimos fila y columna a modificar
         fila: int = int(input("Ingrese la fila de la casilla a modificar: "))
         columna: int = int(input("Ingrese la columna de la casilla a modificar: "))
-        success: bool = self.tablero.modificar_casilla(fila, columna)
+        # Obtenemos el tablero actual
+        tablero: Tablero = dccasillas.tableros[dccasillas.tablero_actual]
+        # Modificamos el tablero
+        success: bool = tablero.modificar_casilla(fila, columna)
         if success:
             print("Casilla modificada exitosamente.")
-            self.mostrar_tablero()
+            tablero.mostrar_tablero()
+            # Actualizamos el tablero en dccasillas
+            dccasillas.tableros[dccasillas.tablero_actual] = tablero
         else:
             print("Error al modificar la casilla. Verifique las coordenadas.")
         return
 
-    def verificar_solucion(self) -> int:
-        success: bool = self.tablero.validar()
+    def verificar_solucion(self) -> None:
+        # Obtenemos el tablero actual
+        tablero: Tablero = dccasillas.tableros[dccasillas.tablero_actual]
+        success: bool = tablero.validar()
         if success:
+            dccasillas.puntaje += tablero.movimientos
             print("La solución es válida.")
+            print(f"Se han sumado {tablero.movimientos} puntos.")
+            print(f"Nuevo puntaje: {dccasillas.puntaje}")
         else:
             print("La solución no es válida.")
         return
     
     def encontrar_solucion(self) -> None:
-        self.tablero.encontrar_solucion()
+        # Obtenemos el tablero actual
+        tablero: Tablero = dccasillas.tableros[dccasillas.tablero_actual]
+        tablero.encontrar_solucion()
         return
 
 if __name__ == "__main__":
