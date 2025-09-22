@@ -59,20 +59,26 @@ class Tablero:
             casilla = self.tablero[fila][columna]
             # Si la casilla está vacía, no se puede modificar
             if casilla == ".":
+                print("No se puede modificar una casilla vacía.")
                 return False
             # Si está deshabilitada, la habilitamos
             if "X" in casilla:
+                print("Habilitando casilla...")
                 self.tablero[fila][columna] = casilla.replace("X", "")
             # Si está habilitada, la deshabilitamos
             else:
+                print("Deshabilitando casilla...")
                 self.tablero[fila][columna] = "X" + casilla
+            self.movimientos += 1
             # True si se realiza la acción
             return True
         # False si entregamos una posición inválida
         except IndexError:
+            print("Posición fuera de rango.")
             return False
         # False si entregamos indices str y no int
         except TypeError:
+            print("Fila y columna deben ser enteros.")
             return False
 
     def validar(self) -> bool:
