@@ -67,7 +67,7 @@ class MenuJuego:
 
     def iniciar_juego(self) -> None:
         # Si no hay usuario, pedimos uno
-        if not self.dccasillas:
+        if not dccasillas:
             usuario: str = input("Ingrese su nombre de usuario: ")
         # Si ya había, le damos la opción de cambiarlo
         else:
@@ -83,7 +83,7 @@ class MenuJuego:
         return
 
     def continuar_juego(self) -> None:
-        if not self.dccasillas:
+        if not dccasillas:
             print("No hay juego en curso. Inicie un nuevo juego primero.")
             return
         # Pedimos mantener tablero actual o cambiar
