@@ -13,14 +13,16 @@ class DCCasillas:
 
     def abrir_tablero(self, num_tablero:int) -> None:
         try:
+            # Debug
+            print(f"Debug: Abriendo tablero {num_tablero}...")
             tablero_objetivo = self.tableros[num_tablero]
+            self.tablero_actual = num_tablero
         except IndexError:
-            print(f"Tablero {num_tablero} fuera de rango.")
-            # self.tablero_actual = None
+            print(f"Error: Tablero {num_tablero} fuera de rango.")
+            self.tablero_actual = None
         except TypeError:
-            print("Número de tablero debe ser un entero.")
-            # self.tablero_actual = None
-        self.tablero_actual = num_tablero
+            print("Error: Número de tablero debe ser un entero.")
+            self.tablero_actual = None
 
     def guardar_estado(self) -> bool: 
         try:    
@@ -99,13 +101,13 @@ class DCCasillas:
                     tablero = Tablero()
                     tablero.cargar_tablero(nombre.strip())
                     tableros.append(tablero)
-            return tableros
         except FileNotFoundError as e:
             print(f"Error: No se encontró el archivo o directorio - {e}")
         except IOError as e:
             print(f"Error: Error de entrada/salida - {e}")
         except ValueError as e:
             print(f"Error: Formato de archivo inválido - {e}")
+        return tableros
         
 
 # if __name__ == "__main__":

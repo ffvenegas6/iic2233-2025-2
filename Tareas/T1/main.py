@@ -75,10 +75,15 @@ class MenuJuego:
         config: str = input("Ingrese el nombre del archivo de configuración: ")
         # Creamos nueva instancia de DCCasillas
         self.dccasillas = DCCasillas(usuario, config)
-        # Seleccionamos el primer tablero
-        self.dccasillas.abrir_tablero(0)
-        # Pasamos al menú de acciones
-        self.menu_acciones.mostrar_menu(self.dccasillas)
+        # Revisamos si se cargaron tableros correctamente
+        if self.dccasillas.tableros:
+            # Seleccionamos el primer tablero
+            self.dccasillas.abrir_tablero(0)
+            # Pasamos al menú de acciones
+            self.menu_acciones.mostrar_menu(self.dccasillas)
+        else:
+            print("No se pudo iniciar el juego. Intente nuevamente.")
+            self.dccasillas = None
         return
 
     def continuar_juego(self) -> None:
@@ -161,7 +166,7 @@ class MenuAcciones:
             opcion = int(input())
         return opcion
 
-    def mostrar_menu(self, dccasillas: DCCasillas=None) -> None:
+    def mostrar_menu(self, dccasillas: DCCasillas) -> None:
         # Mostramos en loop mientras usuario no seleccione última opción
         while self.opcion_actual != len(self.opciones) - 1:
             opcion = self.selector_opciones(dccasillas)
