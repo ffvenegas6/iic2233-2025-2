@@ -128,8 +128,7 @@ class MenuJuego:
 
 class MenuAcciones:
 
-    def __init__(self, dccasillas: DCCasillas) -> None:
-        self.dccasillas = dccasillas
+    def __init__(self) -> None:
         self.opciones: List[str] = [
             "Mostrar tablero",
             "Habilitar/deshabilitar casilla",
@@ -138,32 +137,21 @@ class MenuAcciones:
             "Volver al menú de Juego"
         ]
         self.opcion_actual: int = -1
-        self.usuario: str = None
-        self.puntaje: int = 0
-        self.tablero_actual: int = None
-        self.tableros: List = None
-        self.tablero: Tablero = None
 
-    def actualizar_dccasillas(self, dccasillas: DCCasillas) -> None:
-        self.dccasillas: DCCasillas = dccasillas
-        self.usuario: str = dccasillas.usuario
-        self.puntaje: int = dccasillas.puntaje
-        self.tablero_actual: int = dccasillas.tablero_actual
-        self.tableros: List = dccasillas.tableros
-        self.tablero: Tablero = dccasillas.tableros[dccasillas.tablero_actual]
 
-    def selector_opciones(self) -> int:
+    def selector_opciones(self, dccasillas: DCCasillas=None) -> int:
         # Función para mostrar el menú de acciones
         print("\nDCCasillas")
-        if not self.dccasillas:
+        if not dccasillas:
             print("Usuario: UUU, Puntaje: PPP")
             print("Número de tablero: XXX de YYY")
             print("Movimientos tablero: ppp\n")
         else:
-            print((f"Usuario: {self.usuario}, "
-                   f"Puntaje: {self.puntaje}"))
-            print(f"Número de tablero: {self.tablero_actual} de {len(self.tableros)}")
-            print(f"Movimientos tablero: {self.tablero.movimientos}\n")
+            print((f"Usuario: {dccasillas.usuario}, "
+                   f"Puntaje: {dccasillas.puntaje}"))
+            print(f"Número de tablero: {dccasillas.tablero_actual} de {len(dccasillas.tableros)}")
+            tablero: Tablero = dccasillas.tableros[dccasillas.tablero_actual]
+            print(f"Movimientos tablero: {tablero.movimientos}\n")
         # Desplegamos opciones
         msg = mostrar_opciones("Menú de Acciones", self.opciones)
         opcion: int = int(input(msg))
@@ -173,53 +161,57 @@ class MenuAcciones:
             opcion = int(input())
         return opcion
 
-    def mostrar_menu(self, dccasillas: DCCasillas) -> None:
-        # Actualizamos dccasillas
-        self.actualizar_dccasillas(dccasillas)
+    def mostrar_menu(self, dccasillas: DCCasillas=None) -> None:
         # Mostramos en loop mientras usuario no seleccione última opción
         while self.opcion_actual != len(self.opciones) - 1:
-            opcion = self.selector_opciones()
+            opcion = self.selector_opciones(dccasillas)
             self.opcion_actual = opcion - 1
-            self.ejecutar_opcion(opcion)
+            self.ejecutar_opcion(opcion, dccasillas)
         # Si selecciona última opción, salimos
         print("Volviendo al Menú de Juego!\n")
 
-    def ejecutar_opcion(self, opcion:int) -> None:
+    def ejecutar_opcion(self, opcion:int, dccasillas: DCCasillas=None) -> None:
         print(f"\nOpción [{opcion}]: {self.opciones[self.opcion_actual]}\n")
         if opcion == 1:
-            self.mostrar_tablero()
+            self.mostrar_tablero(dccasillas)
         elif opcion == 2:
-            self.cambiar_casillas()
+            self.cambiar_casillas(dccasillas)
         elif opcion == 3:
-            self.verificar_solucion()
+            self.verificar_solucion(dccasillas)
         elif opcion == 4:
-            self.encontrar_solucion()
+            self.encontrar_solucion(dccasillas)
 
-    def mostrar_tablero(self) -> None:
-        self.tablero.mostrar_tablero()
+    def mostrar_tablero(self, dccasillas: DCCasillas=None) -> None:
+        tablero: Tablero = dccasillas.tableros[dccasillas.tablero_actual]
+        tablero.mostrar_tablero()
         return
-    
-    def cambiar_casillas(self) -> None:
+
+    def cambiar_casillas(self, dccasillas: DCCasillas=None) -> None:
         fila: int = int(input("Ingrese la fila de la casilla a modificar: "))
         columna: int = int(input("Ingrese la columna de la casilla a modificar: "))
-        success: bool = self.tablero.modificar_casilla(fila, columna)
+        tablero_actual: int = dccasillas.tablero_actual
+        success: bool = dccasillas.tableros[tablero_actual].modificar_casilla(fila, columna)
         if success:
             print("Casilla modificada exitosamente.")
-            self.mostrar_tablero()
+            self.mostrar_tablero(dccasillas)
         else:
             print("Error al modificar la casilla. Verifique las coordenadas.")
         return
 
-    def verificar_solucion(self) -> int:
-        success: bool = self.tablero.validar()
+    def verificar_solucion(self, dccasillas: DCCasillas=None) -> int:
+        success: bool = dccasillas.tableros[dccasillas.tablero_actual].validar()
         if success:
             print("La solución es válida.")
+            movimientos_tablero = dccasillas.tableros[dccasillas.tablero_actual].movimientos
+            dccasillas.puntaje += movimientos_tablero
+            print(f"Sumando puntaje: {movimientos_tablero}")
+            print(f"Nuevo puntaje: {dccasillas.puntaje}")
         else:
             print("La solución no es válida.")
         return
-    
-    def encontrar_solucion(self) -> None:
-        self.tablero.encontrar_solucion()
+
+    def encontrar_solucion(self, dccasillas: DCCasillas=None) -> None:
+        dccasillas.tableros[dccasillas.tablero_actual].encontrar_solucion()
         return
 
 if __name__ == "__main__":
