@@ -1,6 +1,6 @@
 from __future__ import annotations
 import os
-from typing import List
+from typing import List, Union
 from visualizador import imprimir_tablero
 
 class Tablero:
@@ -38,21 +38,6 @@ class Tablero:
     def mostrar_tablero(self) -> None:
         imprimir_tablero(self.tablero)
 
-    # def modificar_casilla(self, fila:int, columna:int) -> bool:
-    #     try:
-    #         # Vemos si la casilla está habilitada
-    #         if self.casillas[fila][columna]:
-    #             # Si está habilitada, la deshabilitamos
-    #             self.casillas[fila][columna] = False
-    #         else:
-    #             # Si está deshabilitada, la habilitamos
-    #             self.casillas[fila][columna] = True
-    #         # True si se realiza la acción
-    #         return True
-    #     except Exception as e:
-    #         # False si la acción no se puede realizar
-    #         return False
-
     def modificar_casilla(self, fila:int, columna:int) -> bool:
         # Obtenemos el contenido de la casilla
         try:
@@ -82,10 +67,34 @@ class Tablero:
             return False
 
     def validar(self) -> bool:
-        pass
+        # Validamos filas
+        if not self._validar_fila(self.tablero):
+            return False
+        # Transponemos el tablero para validar columnas como filas
+        columnas: List[List[str]] = [
+            [fila[i] for fila in self.tablero] for i in range(len(self.tablero[0]))
+        ]
+        if not self._validar_fila(columnas):
+            return False
+        self.estado = True
+        return True
 
     def encontrar_solucion(self) -> Tablero:
         pass
+
+    def _validar_fila(self, tablero: List[List[str]]) -> bool:
+        # Iterar sobre cada fila del tablero, excepto la última
+        for fila in tablero[:-1]:
+            # Sumamos los valores de las casillas habilitadas y no vacías excepto la última
+            suma_fila: int = sum(int(casilla) for casilla in fila[:-1] if casilla != "." and "X" not in casilla)
+            # Obtenemos el valor objetivo de la última casilla habilitada
+            objetivo_fila: str = fila[-1]
+            # Verificamos si la suma coincide con el objetivo
+            if objetivo_fila == ".":
+                continue
+            if suma_fila != int(objetivo_fila):
+                return False
+        return True
 
 if __name__ == "__main__":
     tablero = Tablero()

@@ -7,14 +7,14 @@ class DCCasillas:
 
     def __init__(self, usuario:str, config:str) -> None:
         self.usuario: str = usuario
-        self.puntaje: int = 0
-        self.tablero_actual: int = None
+        self.puntaje: int = 0 # se actualiza desde MenuAcciones
+        self.tablero_actual: int = None # se actualiza en abrir_tablero
+        self.num_tableros: int = None # se actualiza en cargar_tableros
         self.tableros: List[Tablero] = self.cargar_tableros(config)
+        self.tableros_resueltos: int = 0 
 
     def abrir_tablero(self, num_tablero:int) -> None:
         try:
-            # Debug
-            print(f"Debug: Abriendo tablero {num_tablero}...")
             tablero_objetivo = self.tableros[num_tablero]
             self.tablero_actual = num_tablero
         except IndexError:
@@ -107,6 +107,7 @@ class DCCasillas:
             print(f"Error: Error de entrada/salida - {e}")
         except ValueError as e:
             print(f"Error: Formato de archivo inválido - {e}")
+        self.num_tableros = num_tableros
         return tableros
         
 

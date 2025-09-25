@@ -33,7 +33,11 @@ class MenuJuego:
         else:
             print((f"Usuario: {self.dccasillas.usuario}, "
                    f"Puntaje: {self.dccasillas.puntaje}"))
-            print("Tableros resueltos: TTT\n")
+            # Actualizamos y mostramos tableros resueltos
+            self.dccasillas.tableros_resueltos = sum(
+                1 for tablero in self.dccasillas.tableros if tablero.estado
+            )
+            print(f"Tableros resueltos: {self.dccasillas.tableros_resueltos}\n")
         # Desplegamos opciones
         msg = mostrar_opciones("Menú de Juego", self.opciones)
         opcion: int = int(input(msg))
@@ -154,7 +158,7 @@ class MenuAcciones:
         else:
             print((f"Usuario: {dccasillas.usuario}, "
                    f"Puntaje: {dccasillas.puntaje}"))
-            print(f"Número de tablero: {dccasillas.tablero_actual} de {len(dccasillas.tableros)}")
+            print(f"Número de tablero: {dccasillas.tablero_actual} de {dccasillas.num_tableros}")
             tablero: Tablero = dccasillas.tableros[dccasillas.tablero_actual]
             print(f"Movimientos tablero: {tablero.movimientos}\n")
         # Desplegamos opciones
@@ -172,7 +176,8 @@ class MenuAcciones:
             opcion = self.selector_opciones(dccasillas)
             self.opcion_actual = opcion - 1
             self.ejecutar_opcion(opcion, dccasillas)
-        # Si selecciona última opción, salimos
+        # Si selecciona última opción, reseteamos opción actual y volvemos
+        self.opcion_actual = -1
         print("Volviendo al Menú de Juego!\n")
 
     def ejecutar_opcion(self, opcion:int, dccasillas: DCCasillas=None) -> None:
