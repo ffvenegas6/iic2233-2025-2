@@ -53,26 +53,50 @@ class DCCasillas:
             path = os.path.join("data", f"{self.usuario}.txt")
             with open(path, 'r', encoding="utf-8") as file:
                 # 1ra linea: número de tableros
-                num_tab: int = int(file.readline().strip())
-                self.tableros = []
-                print(f"Recuperando {num_tab} tableros...")
+                try:
+                    num_tab: int = int(file.readline().strip())
+                    self.tableros = []
+                    print(f"Recuperando {num_tab} tableros...")
+                # Si no es un entero, retorna False
+                except ValueError:
+                    print("Error: Formato de archivo inválido. " \
+                    "Primera línea debe ser el número de tableros.")
+                    return False
                 for i in range(num_tab):
                     # print(f"Tablero {i + 1}:")
                     tablero = Tablero()
-                    # 1ra linea: movimientos
-                    tablero.movimientos = int(file.readline().strip())
+                    # 1ra linea: número de movimientos
+                    try:
+                        tablero.movimientos = int(file.readline().strip())
+                    # Si no es un entero, retorna False
+                    except ValueError:
+                        print("Error: Formato de archivo inválido. " \
+                              "Línea de movimientos debe ser un entero.")
+                        return False
                     # print(f"Movimientos: {tablero.movimientos}")
                     # 2da linea: número de filas y columnas
-                    encabezado: List[str] = file.readline().strip().split(' ')
-                    num_fil: int = int(encabezado[0])
-                    num_col: int = int(encabezado[1])
+                    try:
+                        encabezado: List[str] = file.readline().strip().split(' ')
+                        num_fil: int = int(encabezado[0])
+                        num_col: int = int(encabezado[1])
+                    # Si no es son enteros, retorna False
+                    except ValueError:
+                        print("Error: Formato de archivo inválido." \
+                              " Línea de filas y columnas debe ser 'int int'.")
+                        return False
                     # print(f"Número de filas: {num_fil}, Número de columnas: {num_col}")
                     # Contenido del tablero
                     contenido_tablero = f"{num_fil} {num_col}\n"
                     # Leer las siguientes líneas del tablero
                     for _ in range(num_fil + 1): # +1 para incluir la fila objetivo
-                        contenido_tablero += file.readline()
-                
+                        linea = file.readline()
+                        # Si la linea contiene signo negativo, retorna False
+                        if '-' in linea:
+                            print("Error: Formato de archivo inválido." \
+                                  " No se permiten números negativos.")
+                            return False
+                        contenido_tablero += linea
+
                     # Crear un archivo temporal en el directorio config/
                     temp_filename = f"temp_tablero_{i}.txt"
                     temp_path = os.path.join("config", temp_filename)
@@ -81,12 +105,17 @@ class DCCasillas:
 
                     # Cargar el tablero usando cargar_tablero()
                     tablero.cargar_tablero(temp_filename)
+                    # Verificar que el tablero se haya resuelto previamente
+                    tablero.validar()
 
                     # Eliminar el archivo temporal después de cargarlo
                     os.remove(temp_path)
 
                     # Agregar el tablero a la lista
                     self.tableros.append(tablero)
+
+                    # debug: mostrar el tablero cargado
+                    tablero.mostrar_tablero()
             return True
         except FileNotFoundError as e:
             print(f"Error: No se encontró el archivo o directorio - {e}")
