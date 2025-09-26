@@ -44,15 +44,15 @@ class Tablero:
             casilla = self.tablero[fila][columna]
             # Si la casilla está vacía, no se puede modificar
             if casilla == ".":
-                print("No se puede modificar una casilla vacía.")
+                # print("No se puede modificar una casilla vacía.")
                 return False
             # Si está deshabilitada, la habilitamos
             if "X" in casilla:
-                print("Habilitando casilla...")
+                # print("Habilitando casilla...")
                 self.tablero[fila][columna] = casilla.replace("X", "")
             # Si está habilitada, la deshabilitamos
             else:
-                print("Deshabilitando casilla...")
+                # print("Deshabilitando casilla...")
                 self.tablero[fila][columna] = "X" + casilla
             self.movimientos += 1
             # True si se realiza la acción
@@ -79,8 +79,80 @@ class Tablero:
         self.estado = True
         return True
 
+    # def encontrar_solucion(self) -> Tablero:
+    #     # Creamos copia del tablero actual
+    #     tablero_copia = Tablero()
+    #     tablero_copia.tablero = [fila.copy() for fila in self.tablero]
+    #     tablero_copia.num_fil = self.num_fil
+    #     tablero_copia.num_col = self.num_col
+    #     # Si el tablero ya es válido, retornamos la copia
+    #     if tablero_copia.validar():
+    #         return tablero_copia
+    #     # Backtracking para encontrar solución
+    #     def find_solution(tablero: Tablero) -> bool:
+    #         # Si el tablero es válido, retornamos True
+    #         if tablero.validar():
+    #             return True
+    #         # Iteramos sobre cada casilla del tablero
+    #         for i in range(tablero.num_fil):
+    #             for j in range(tablero.num_col):
+    #                 casilla = tablero.tablero[i][j]
+    #                 # Si la casilla es modificable (no vacía)
+    #                 if casilla != ".":
+    #                     # Intentamos cambiar su estado
+    #                     tablero.modificar_casilla(i, j)
+    #                     # Llamada recursiva para intentar encontrar solución
+    #                     if find_solution(tablero):
+    #                         return True
+    #                     # Si no se encontró solución, revertimos el cambio
+    #                     tablero.modificar_casilla(i, j)
+    #         # Si no se encontró solución, retornamos False
+    #         return False
+    #     tiene_solucion = find_solution(tablero_copia)
+    #     if tiene_solucion:
+    #         return tablero_copia
+    #     else:
+    #         return None
+
     def encontrar_solucion(self) -> Tablero:
-        pass
+        # Creamos copia del tablero actual
+        tablero_copia = Tablero()
+        tablero_copia.tablero = [fila.copy() for fila in self.tablero]
+        tablero_copia.num_fil = self.num_fil
+        tablero_copia.num_col = self.num_col
+        
+        # Si el tablero ya es válido, retornamos la copia
+        if tablero_copia.validar():
+            return tablero_copia
+            
+        # Obtenemos todas las casillas modificables (valid choices)
+        casillas_modificables = [] # Lista de tuplas (fila, columna)
+        for i in range(tablero_copia.num_fil):
+            for j in range(tablero_copia.num_col):
+                if tablero_copia.tablero[i][j] != ".":
+                    casillas_modificables.append((i, j))
+        # Función recursiva para encontrar solución (backtracking)
+        def find_solution(tablero: Tablero, indice: int = 0) -> bool:
+            # Validamos el tablero si llegamos al final de las casillas modificables
+            if indice >= len(casillas_modificables):
+                return tablero.validar()
+            # Si no, obtenemos la siguiente casilla a modificar
+            i, j = casillas_modificables[indice]
+            # Vemos si podemos encontrar solución
+            if find_solution(tablero, indice + 1):
+                return True
+            # Si no encuentra, probamos cambiando el estado (apply choice)
+            tablero.modificar_casilla(i, j)
+            if find_solution(tablero, indice + 1):
+                return True
+            # Si ninguna opción funcionó, retornamos False 
+            return False
+        # Intentamos encontrar solución
+        tiene_solucion = find_solution(tablero_copia)
+        if tiene_solucion:
+            return tablero_copia
+        else:
+            return None
 
     def _validar_fila(self, tablero: List[List[str]]) -> bool:
         # Iterar sobre cada fila del tablero, excepto la última
