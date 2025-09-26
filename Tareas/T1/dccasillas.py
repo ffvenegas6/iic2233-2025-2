@@ -25,6 +25,12 @@ class DCCasillas:
             self.tablero_actual = None
 
     def guardar_estado(self) -> bool: 
+        # Si el usuario es inválido o no hay tableros, retorna False
+        if not self.usuario or self.usuario.strip() == "":
+            return False
+        elif not self.tableros or len(self.tableros) == 0:
+            return False
+        # Guardar estado en data/<usuario>.txt
         try:    
             path = os.path.join("data", f"{self.usuario}.txt")
             with open(path, 'w', encoding="utf-8") as file:
