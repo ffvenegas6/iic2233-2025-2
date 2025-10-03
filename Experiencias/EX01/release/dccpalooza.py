@@ -18,6 +18,10 @@ class DCCPalooza:
     @property
     def dia(self):
         return self.__dia
+    
+    @dia.setter
+    def dia(self, valor):
+        self.__dia = valor
 
     @property
     def funcionando(self):
@@ -45,8 +49,31 @@ class DCCPalooza:
 
     def nuevo_dia(self):
         # COMPLETAR
-        pass
+        # Verificar condición de término
+        exito: bool = self.exito_del_concierto
+        if not exito:
+            return
+        self.dia += 1
+        if self.dia <= 3:
+            print(f"Comienza el día {self.dia} del DCCPalooza!")
 
     def ejecutar_evento(self):
         # COMPLETAR
-        pass
+        if random() < self.prob_evento:
+            evento = choice(["Lluvia", "Terremoto", "Ola de calor"])
+            if evento == "Lluvia":
+                self.artista_actual.afinidad_con_publico -= AFINIDAD_LLUVIA
+                print(f"Hubo {evento} en el concierto!")
+                print(f"La afinidad con el público de {self.artista_actual.nombre} "
+                      f"disminuyó en {AFINIDAD_LLUVIA} puntos.")
+            elif evento == "Terremoto":
+                self.cant_publico -= PUBLICO_TERREMOTO
+                print(f"Hubo {evento} en el concierto!")
+                print(f"La cantidad de público disminuyó en {PUBLICO_TERREMOTO} personas.")
+            elif evento == "Ola de calor":
+                self.artista_actual.afinidad_con_publico -= AFINIDAD_OLA_CALOR
+                self.cant_publico -= PUBLICO_OLA_CALOR
+                print(f"Hubo {evento} en el concierto!")
+                print(f"La afinidad con el público de {self.artista_actual.nombre} "
+                      f"disminuyó en {AFINIDAD_OLA_CALOR} puntos.")
+                print(f"La cantidad de público disminuyó en {PUBLICO_OLA_CALOR} personas.")
