@@ -18,9 +18,27 @@ class Jugador:
             carta.usar_habilidad_especial()
     
     def recibir_danio(self, danio):
-        cartas_defensa = [
-            carta for carta in self.cartas if carta.tipo ["estructura", "mixta"]
+        cartas_tropa = [
+            carta for carta in self.cartas if carta.tipo == "tropa"
         ]
-        for carta in cartas_defensa:
-            carta.recibir_danio(danio)
+        # cartas_estructura = [
+        #     carta for carta in self.cartas if carta.tipo == "estructura"
+        # ]
+        # cartas_mixta = [
+        #     carta for carta in self.cartas if carta.tipo == "mixta"
+        # ]
+        cartas_defensa = [
+            carta for carta in self.cartas if carta.tipo in ["estructura", "mixta"]
+        ]
         
+        # Cartas ataque reciben todo el daño si no hay defensa
+        # if not cartas_estructura and not cartas_mixta:
+        if not cartas_defensa:
+            for carta in cartas_tropa:
+                carta.recibir_danio(danio)
+        
+        else:
+            # danio_ef = danio / (len(cartas_estructura) + len(cartas_mixta))
+            danio_ef = danio / len(cartas_defensa)
+            for carta in cartas_defensa:
+                carta.recibir_danio(danio_ef)
