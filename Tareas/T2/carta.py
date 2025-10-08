@@ -33,6 +33,7 @@ class Carta():
     def recibir_danio(self, danio_ia: int) -> int:
         danio_recibido = int(danio_ia * self.mult_defensa)
         self.vida -= danio_recibido
+        print(f"{self.nombre} ha recibido {danio_recibido} de daño.")
         return danio_recibido
 
     def usar_habilidad_especial(self) -> None:
@@ -43,25 +44,17 @@ class Carta():
     def __str__(self) -> str:
         return f"{self.nombre} ({self.tipo}): {self.vida}/{self.vida_max} HP"
 
+
 class CartaTropa(Carta):
-    def __init__(
-            self,
-            nombre: str,
-            vida_max: int,
-            vida: int,
-            tipo: str,
-            mult_defensa: float,
-            precio: int,
-            prob_especial: float,
-            ataque: int,
-            mult_ataque: float,
-    ):
-        super().__init__(nombre, vida_max, vida, tipo, mult_defensa, precio, prob_especial)
-        self.ataque = ataque
-        self.mult_ataque = mult_ataque
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ataque = kwargs.get('ataque')
+        self.mult_ataque = kwargs.get('mult_ataque')
 
     def atacar(self, ia) -> int:
         danio_realizado = int(self.ataque * self.mult_ataque)
+        print(f"{self.nombre} ataca a {ia.nombre} con {danio_realizado} de daño.")
         ia.recibir_danio(danio_realizado)
         return danio_realizado
 
@@ -69,43 +62,21 @@ class CartaTropa(Carta):
         """Implementar la habilidad especial de la tropa."""
         pass
 
-class CartaEstructura(Carta):
 
-    def __init__(
-            self,
-            nombre: str,
-            vida_max: int,
-            vida: int,
-            tipo: str,
-            mult_defensa: float,
-            precio: int,
-            prob_especial: float,
-            ataque: int,
-            mult_ataque: float,
-    ):
-        super().__init__(nombre, vida_max, vida, tipo, mult_defensa, precio, prob_especial)
+class CartaEstructura(Carta):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def usar_habilidad_especial(self):
         """Implementar la habilidad especial de la tropa."""
         pass
 
+
 class CartaMixta(CartaTropa, CartaEstructura):
-    def __init__(
-            self,
-            nombre: str,
-            vida_max: int,
-            vida: int,
-            tipo: str,
-            mult_defensa: float,
-            precio: int,
-            prob_especial: float,
-            ataque: int,
-            mult_ataque: float,
-    ):
-        super().__init__(
-            nombre, vida_max, vida, tipo, mult_defensa,
-            precio, prob_especial, ataque, mult_ataque
-        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def usar_habilidad_especial(self):
         """Implementar la habilidad especial de la tropa."""
