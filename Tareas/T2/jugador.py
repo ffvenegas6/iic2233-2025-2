@@ -15,7 +15,7 @@ class Jugador:
         ]
         for carta in cartas_ataque:
             carta.atacar(ia)
-            carta.usar_habilidad_especial()
+            # carta.usar_habilidad_especial()
     
     def recibir_danio(self, danio):
         cartas_tropa = [
