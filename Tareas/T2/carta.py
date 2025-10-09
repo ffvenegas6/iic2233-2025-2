@@ -35,6 +35,7 @@ class Carta():
         danio_recibido = int(danio_ia * self.mult_defensa)
         self.vida -= danio_recibido
         print(f"{self.nombre} ha recibido {danio_recibido} de daño.")
+        print(f"Le queda {self.vida} / {self.vida_max} HP")
         return danio_recibido
 
     def usar_habilidad_especial(self) -> None:
@@ -58,7 +59,7 @@ class CartaTropa(Carta):
     def atacar(self, ia) -> int:
         danio_realizado = int(self.ataque * self.mult_ataque)
         print(f"{self.nombre} ataca a {ia.nombre} con {danio_realizado} de daño.")
-        ia.recibir_danio(danio_realizado)
+        ia.recibir_danio(danio_realizado, self.tipo)
         return danio_realizado
 
     def usar_habilidad_especial(self) -> None:
