@@ -6,19 +6,20 @@ class IA():
             self,
             nombre: str,
             vida_max: int,
-            vida: int,
             ataque: int,
-            mult_defensa: float,
-            mult_ataque: float,
+            descripcion: str,
+            mult_dict: dict,
             prob_especial: float,
+            velocidad: float,
     ):
         self.nombre = nombre
         self.vida_max = vida_max
-        self.__vida = vida
+        self.__vida = vida_max
         self.ataque = ataque
-        self.mult_defensa = mult_defensa
-        self.mult_ataque = mult_ataque
+        self.descripcion = descripcion
+        self.mult_dict = mult_dict 
         self.prob_especial = prob_especial
+        self.velocidad = velocidad
 
     @property
     def vida(self) -> int:
@@ -33,16 +34,17 @@ class IA():
         else:
             self.__vida = nueva_vida
 
-    def recibir_danio(self, danio: int) -> int:
-        danio_recibido = int(danio * self.mult_defensa)
+    def recibir_danio(self, danio: int, tipo: str) -> int:
+        mult_defensa = self.mult_dict.get(tipo).get("mult_defensa")
+        danio_recibido = int(danio * mult_defensa)
         self.vida -= danio_recibido
-        print(f"{self.nombre} ha recibido {danio_recibido} de daño.")
+        print(f"Para {tipo}, el multiplicador de defensa de {self.nombre} es {mult_defensa}.")
         return danio_recibido
     
     def atacar(self, jugador) -> int:
-        danio_realizado = int(self.ataque * self.mult_ataque)
+        danio_realizado = self.ataque
         print(f"{self.nombre} ataca a {jugador.nombre} con {danio_realizado} de daño.")
-        jugador.recibir_danio(danio_realizado)
+        jugador.recibir_danio(danio_realizado, self.mult_dict)
         return danio_realizado
 
     def usar_habilidad_especial(self) -> None:
