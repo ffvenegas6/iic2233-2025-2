@@ -17,28 +17,31 @@ class Jugador:
             carta.atacar(ia)
             # carta.usar_habilidad_especial()
     
-    def recibir_danio(self, danio):
+    def recibir_danio(self, danio, mult_dict):
         cartas_tropa = [
             carta for carta in self.cartas if carta.tipo == "tropa"
         ]
-        # cartas_estructura = [
-        #     carta for carta in self.cartas if carta.tipo == "estructura"
-        # ]
-        # cartas_mixta = [
-        #     carta for carta in self.cartas if carta.tipo == "mixta"
-        # ]
         cartas_defensa = [
             carta for carta in self.cartas if carta.tipo in ["estructura", "mixta"]
         ]
         
-        # Cartas ataque reciben todo el daño si no hay defensa
-        # if not cartas_estructura and not cartas_mixta:
+        # Cada carta de ataque recibe todo el daño si no hay cartas de defensa
         if not cartas_defensa:
+            print("El jugador no tiene cartas de defensa. Cartas de ataque reciben todo el daño.")
             for carta in cartas_tropa:
-                carta.recibir_danio(danio)
+                mult_ataque_ia = mult_dict.get(carta.tipo).get("mult_ataque")
+                danio_recibido = int(danio * mult_ataque_ia)
+                print(f"{carta.nombre} ha recibido {danio} de daño.")
+                print(f"Para {carta.tipo}, el multiplicador de ataque de la IA es {mult_ataque_ia}.")
+                carta.recibir_danio(danio_ia=danio_recibido)
         
         else:
-            # danio_ef = danio / (len(cartas_estructura) + len(cartas_mixta))
-            danio_ef = danio / len(cartas_defensa)
+            print("El jugador tiene cartas de defensa. Distribuyendo daño entre cartas de defensa.")
             for carta in cartas_defensa:
+                mult_ataque_ia = mult_dict.get(carta.tipo).get("mult_ataque")
+                danio_recibido = int(danio * mult_ataque_ia)
+                danio_ef = danio_recibido / len(cartas_defensa)
+                print(f"{carta.nombre} ha recibido {danio} de daño.")
+                print(f"Para {carta.tipo}, el multiplicador de ataque de la IA es {mult_ataque_ia}.")
+                print(f"Distribuyendo el daño, se recibe: {danio_ef}.")
                 carta.recibir_danio(danio_ef)
