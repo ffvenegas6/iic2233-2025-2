@@ -3,19 +3,20 @@ class Carta():
             self,
             nombre: str,
             vida_max: int,
-            vida: int,
             tipo: str,
             mult_defensa: float,
             precio: int,
             prob_especial: float,
+            habilidad_especial: str
     ):
         self.nombre = nombre
         self.vida_max = vida_max
-        self.__vida = vida
+        self.__vida = vida_max
         self.tipo = tipo
         self.mult_defensa = mult_defensa
         self.precio = precio
         self.prob_especial = prob_especial
+        self.habilidad_especial = habilidad_especial
 
     @property
     def vida(self) -> int:
@@ -42,7 +43,9 @@ class Carta():
         pass 
 
     def __str__(self) -> str:
-        return f"{self.nombre} ({self.tipo}): {self.vida}/{self.vida_max} HP"
+        return (f"{self.nombre} ({self.tipo}): {self.vida}/{self.vida_max} HP"
+                "Habilidad especial: "
+                f"{self.habilidad_especial}")
 
 
 class CartaTropa(Carta):
