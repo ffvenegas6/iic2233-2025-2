@@ -1,6 +1,7 @@
 from collections import defaultdict
 from carta import CartaTropa, CartaEstructura
 from ia import IA
+import csv
 
 
 def cargar_cartas(archivo_cartas):
@@ -39,7 +40,12 @@ def cargar_cartas(archivo_cartas):
 def cargar_multiplicadores(archivo_mult):
     mult_dict = defaultdict(dict)
     with open(archivo_mult, "r", encoding="utf-8") as datos_mult:
+        contador = 0
         for ia in datos_mult:
+            # Saltamos encabezado
+            if contador == 0:
+                contador += 1
+                continue
             ia = ia.strip().split(",")
             nombre = ia[0]
             carta_tipo = ia[1]  # "tropa" o "estructura"
@@ -49,24 +55,25 @@ def cargar_multiplicadores(archivo_mult):
                 "mult_ataque": mult_ataque,
                 "mult_defensa": mult_defensa,
             }
+            contador += 1
     return mult_dict
 
 
 def cargar_ias(archivo_ias, mult_dict):
     lista_ias = []
-    with open(archivo_ias, "r", encoding="utf-8") as datos_ias:
+    with open(archivo_ias, "r", newline="", encoding="utf-8") as f:
+        datos_ias = csv.DictReader(f)
         for ia in datos_ias:
-            ia = ia.split(",")
-            nombre = ia[0]
+            nombre = ia["nombre"]
             mult_dict = mult_dict.get(nombre)
             instancia_ia = IA(
-                nombre=ia[0],
-                vida_max=int(ia[1]),
-                ataque=int(ia[2]),
-                descripcion=ia[3],
+                nombre=nombre,
+                vida_max=int(ia["vida_maxima"]),
+                ataque=int(ia["ataque"]),
+                descripcion=ia["descripcion"],
                 mult_dict=mult_dict,
-                prob_especial=float(ia[4]),
-                velocidad=float(ia[5]),
+                prob_especial=float(ia["probabilidad_especial"]),
+                velocidad=float(ia["velocidad"]),
             )
             lista_ias.append(instancia_ia)
     return lista_ias
