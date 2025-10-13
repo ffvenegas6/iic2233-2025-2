@@ -53,8 +53,8 @@ class CartaTropa(Carta):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ataque = kwargs.get('ataque')
-        self.mult_ataque = kwargs.get('mult_ataque')
+        self.ataque: int = 0
+        self.mult_ataque: float = 0.0
 
     def atacar(self, ia) -> int:
         danio_realizado = int(self.ataque * self.mult_ataque)
