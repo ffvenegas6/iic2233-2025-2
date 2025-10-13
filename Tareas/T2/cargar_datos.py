@@ -8,6 +8,8 @@ def cargar_cartas(archivo_cartas):
     with open(archivo_cartas, "r", encoding="utf-8") as datos_cartas:
         for carta in datos_cartas:
             carta = carta.split(",")
+            if carta[1] in ["tipo", "mixta"]:
+                continue
             if carta[1] == "tropa":
                 instancia_carta = CartaTropa(
                     nombre=carta[0],
@@ -16,10 +18,10 @@ def cargar_cartas(archivo_cartas):
                     mult_defensa=float(carta[3]),
                     precio=int(carta[4]),
                     prob_especial=float(carta[5]),
-                    ataque=int(carta[6]),
-                    mult_ataque=float(carta[7]),
                     habilidad_especial=carta[8],
                 )
+                instancia_carta.ataque=int(carta[6]),
+                instancia_carta.mult_ataque=float(carta[7]),
             elif carta[1] == "estructura":
                 instancia_carta = CartaEstructura(
                     nombre=carta[0],
