@@ -64,10 +64,11 @@ def menu_principal(jugador, ias):
     ia_actual = 0
     index = ""
     while True:
+        print()
         print("-" * 30)
         print("MENÚ PRINCIPAL".center(30, " "))
         print("-" * 30)
-        print(f"Dinero disponible: {jugador.oro}")
+        print(f"Dinero disponible: {jugador.oro}G")
         print(f"Ronda actual: {ronda_actual}") 
         print(f"IA Enemiga: {ias[ia_actual]}")
         print()
@@ -83,6 +84,9 @@ def menu_principal(jugador, ias):
         if index == "0":
             print("Hasta pronto!")
             sys.exit(0)
+
+        else:
+            print("Seleccione una opción válida!")
 
 if __name__ == "__main__":
     ejecucion()
