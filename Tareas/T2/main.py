@@ -5,6 +5,9 @@ from typing import List
 from jugador import Jugador
 from carta import Carta
 from cargar_datos import cargar_cartas, cargar_multiplicadores, cargar_ias
+from constants import (
+    DINERO_INICIAL
+)
 
 def ejecucion():
     if len(sys.argv) != 3:
