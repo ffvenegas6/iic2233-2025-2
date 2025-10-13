@@ -53,5 +53,5 @@ class IA():
         pass 
 
     def __str__(self) -> str:
-        return f"{self.nombre} (IA): {self.vida}/{self.vida_max} HP"
+        return f"{self.nombre}: {self.vida}/{self.vida_max} HP"
 

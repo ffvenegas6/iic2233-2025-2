@@ -3,6 +3,7 @@ import sys
 import random
 from typing import List
 from jugador import Jugador
+from ia import IA
 from carta import Carta
 from cargar_datos import cargar_cartas, cargar_multiplicadores, cargar_ias
 from constants import (
@@ -19,8 +20,6 @@ def ejecucion():
     seleccion_inicial(dificultad, nombre_usuario)
 
 def seleccion_inicial(dificultad, nombre_usuario):
-    jugador = Jugador(nombre_usuario)
-
     path_cartas = os.path.join("data", "cartas.csv")
     pool_global: List[Carta] = cargar_cartas(path_cartas)
     random_n = random.randint(3, 5)
@@ -38,14 +37,52 @@ def seleccion_inicial(dificultad, nombre_usuario):
             print(f"[{i + 1}] {carta.nombre}")
         print(f"[{len(random_cartas) + 1}] Continuar al Menú Principal")
         index = int(input(f"Seleccione hasta {random_n} cartas para su mazo: "))
-        #print("(Debe seleccionar al menos una carta)")
         if index == (len(random_cartas) + 1):
+            if not cartas_seleccionadas:
+                print("Debes seleccionar al menos una carta")
+                continue
             break
         if index > (len(random_cartas) + 1) or index <= 0:
             print("Debe entregar un entero válido")
             continue
         cartas_seleccionadas.append(random_cartas[index - 1])
         random_cartas.pop(index - 1)
+
+    jugador = Jugador(nombre_usuario)
+    jugador.cartas = cartas_seleccionadas 
+    jugador.coleccion = cartas_seleccionadas 
+    jugador.oro = DINERO_INICIAL 
+
+    path_mult = os.path.join("data", "multiplicadores.csv")
+    mult_dict = cargar_multiplicadores(path_mult)
+    path_ias = os.path.join("data", f"ias_{dificultad}.csv")
+    ias: List[IA] = cargar_ias(path_ias, mult_dict)
+    menu_principal(jugador, ias)
+
+def menu_principal(jugador, ias):
+    ronda_actual = 1
+    ia_actual = 0
+    index = ""
+    while True:
+        print("-" * 30)
+        print("MENÚ PRINCIPAL".center(30, " "))
+        print("-" * 30)
+        print(f"Dinero disponible: {jugador.oro}")
+        print(f"Ronda actual: {ronda_actual}") 
+        print(f"IA Enemiga: {ias[ia_actual]}")
+        print()
+        print("[1] Entrar en combate")
+        print("[2] Inventario (gestionar mazo)")
+        print("[3] Tienda")
+        print("[4] Ver información de mis cartas")
+        print("[5] Espiar a la IA")
+        print("[0] Salir del juego")
+        print()
+        index = input("Indique su opción: ")
+
+        if index == "0":
+            print("Hasta pronto!")
+            sys.exit(0)
 
 if __name__ == "__main__":
     ejecucion()
