@@ -44,9 +44,8 @@ class Carta():
         pass 
 
     def __str__(self) -> str:
-        return (f"{self.nombre} ({self.tipo}): {self.vida}/{self.vida_max} HP"
-                "Habilidad especial: "
-                f"{self.habilidad_especial}")
+        return (f"{self.nombre} ({self.tipo}): {self.vida}/{self.vida_max} HP\n"
+                f"Habilidad especial: {self.habilidad_especial}")
 
 
 class CartaTropa(Carta):
