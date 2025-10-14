@@ -5,6 +5,7 @@ from typing import List
 from jugador import Jugador
 from ia import IA
 from carta import Carta
+from dccartas import DCCartas
 from cargar_datos import cargar_cartas, cargar_multiplicadores, cargar_ias
 from constants import (
     DINERO_INICIAL
@@ -57,20 +58,18 @@ def seleccion_inicial(dificultad, nombre_usuario):
     mult_dict = cargar_multiplicadores(path_mult)
     path_ias = os.path.join("data", f"ias_{dificultad}.csv")
     ias: List[IA] = cargar_ias(path_ias, mult_dict)
-    menu_principal(jugador, ias)
+    dccartas = DCCartas(jugador, ias, pool_global)
+    menu_principal(dccartas)
 
-def menu_principal(jugador, ias):
-    ronda_actual = 1
-    ia_actual = 0
-    index = ""
-    while True:
+def menu_principal(dccartas):
+    while dccartas.funcionando:
         print()
         print("-" * 30)
         print("MENÚ PRINCIPAL".center(30, " "))
         print("-" * 30)
-        print(f"Dinero disponible: {jugador.oro}G")
-        print(f"Ronda actual: {ronda_actual}") 
-        print(f"IA Enemiga: {ias[ia_actual]}")
+        print(f"Dinero disponible: {dccartas.jugador.oro}G")
+        print(f"Ronda actual: {dccartas.ronda}")
+        print(f"IA Enemiga: {dccartas.ia_actual.nombre if dccartas.ia_actual else 'Ninguna'}")
         print()
         print("[1] Entrar en combate")
         print("[2] Inventario (gestionar mazo)")
@@ -84,7 +83,20 @@ def menu_principal(jugador, ias):
         if index == "0":
             print("Hasta pronto!")
             sys.exit(0)
-
+        elif index == "1":
+            print("Combate")
+        elif index == "2":
+            print("Inventario")
+        elif index == "3":
+            print("Tienda")
+        elif index == "4":
+            print("-" * 20)
+            for index, carta in enumerate(dccartas.jugador.cartas):
+                print(f"[{index + 1}] {carta}")
+                print("-" * 20)
+        elif index == "5":
+            print(f"Espiando a {dccartas.ia_actual.nombre}...")
+            print(dccartas.ia_actual)
         else:
             print("Seleccione una opción válida!")
 
