@@ -6,9 +6,11 @@ import csv
 
 def cargar_cartas(archivo_cartas):
     lista_cartas = []
-    with open(archivo_cartas, "r", encoding="utf-8") as datos_cartas:
+    with open(archivo_cartas, "r", encoding="utf-8") as f:
+        datos_cartas = csv.reader(f)
+        next(datos_cartas)  # Saltar encabezado
         for carta in datos_cartas:
-            carta = carta.split(",")
+            # carta = carta.split(",")
             if carta[1] in ["tipo", "mixta"]:
                 continue
             if carta[1] == "tropa":
