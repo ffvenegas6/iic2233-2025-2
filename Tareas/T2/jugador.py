@@ -5,9 +5,21 @@ class Jugador:
 
     def __init__(self, nombre):
         self.nombre: str = nombre
-        self.cartas: List[Carta] = []
+        self.__cartas: List[Carta] = []
         self.coleccion: List[Carta] = []
         self.oro: int = 0
+
+    @property
+    def cartas(self):
+        return self.__cartas
+    
+    @cartas.setter
+    def cartas(self, nuevas_cartas: List[Carta]):
+        if len(self.cartas) + len(nuevas_cartas) <= 5:
+            self.__cartas.extend(nuevas_cartas)
+        else:
+            print("No se pueden agregar más cartas. El límite es 5.")
+
 
     def atacar(self, ia):
         cartas_ataque = [
