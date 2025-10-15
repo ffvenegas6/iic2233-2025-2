@@ -14,12 +14,21 @@ class Jugador:
         return self.__cartas
     
     @cartas.setter
-    def cartas(self, nuevas_cartas: List[Carta]):
+    def cartas(self, nuevas_cartas: List[Carta]) -> bool:
         if len(nuevas_cartas) <= 5:
             self.__cartas.extend(nuevas_cartas)
+            return True
         else:
             print("El límite de cartas en el mazo es de 5.")
+            return False
 
+    def agregar_carta(self, carta: Carta) -> bool:
+        if len(self.__cartas) < 5:
+            self.__cartas.append(carta)
+            return True
+        else:
+            print("El límite de cartas en el mazo es de 5.")
+            return False
 
     def atacar(self, ia):
         cartas_ataque = [
