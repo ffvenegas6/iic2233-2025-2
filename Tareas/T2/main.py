@@ -29,7 +29,6 @@ def seleccion_inicial(dificultad, nombre_usuario):
     print("-" * 30)
     print("SELECCIÓN INICIAL".center(30, " "))
     print("-" * 30)
-    index: int = 0
     while True:
         print()
         print(f"Cartas seleccionadas: ({len(cartas_seleccionadas)}) "
@@ -37,21 +36,27 @@ def seleccion_inicial(dificultad, nombre_usuario):
         for i, carta in enumerate(random_cartas):
             print(f"[{i + 1}] {carta.nombre}")
         print(f"[{len(random_cartas) + 1}] Continuar al Menú Principal")
-        index = int(input(f"Seleccione hasta {random_n} cartas para su mazo: "))
-        if index == (len(random_cartas) + 1):
+        index = input(f"Seleccione hasta {random_n} cartas para su mazo: ")
+        # si elige la última opción (avanzar al menú principal)
+        if not index.isdigit():
+            print("Seleccione una opción válida!")
+        elif int(index) == (len(random_cartas) + 1):
+            # Si no ha seleccionado cartas, seguimos en el loop
             if not cartas_seleccionadas:
                 print("Debes seleccionar al menos una carta")
                 continue
+            # Si ha seleccionado cartas, salimos del loop
             break
-        if index > (len(random_cartas) + 1) or index <= 0:
-            print("Debe entregar un entero válido")
-            continue
-        cartas_seleccionadas.append(random_cartas[index - 1])
-        random_cartas.pop(index - 1)
+        # Si elige una carta válida, la agrega a las seleccionada
+        elif 0 < int(index) < (len(random_cartas) + 1):
+            cartas_seleccionadas.append(random_cartas[int(index) - 1])
+            random_cartas.pop(int(index) - 1)
+        else:
+            print("Seleccione una opción válida!")
 
     jugador = Jugador(nombre_usuario)
     jugador.cartas = cartas_seleccionadas 
-    jugador.coleccion = cartas_seleccionadas 
+    # jugador.coleccion = cartas_seleccionadas 
     jugador.oro = DINERO_INICIAL 
 
     path_mult = os.path.join("data", "multiplicadores.csv")
@@ -86,7 +91,7 @@ def menu_principal(dccartas):
         elif index == "1":
             print("Combate")
         elif index == "2":
-            print("Inventario")
+            menu_inventario(dccartas)
         elif index == "3":
             print("Tienda")
         elif index == "4":
@@ -97,6 +102,39 @@ def menu_principal(dccartas):
         elif index == "5":
             print(f"Espiando a {dccartas.ia_actual.nombre}...")
             print(dccartas.ia_actual)
+        else:
+            print("Seleccione una opción válida!")
+
+def menu_inventario(dccartas):
+    while True:
+        print()
+        print("-" * 30)
+        print("INVENTARIO".center(30, " "))
+        print("-" * 30)
+        print(f"Mazo:")
+        print("-" * 20)
+        for index, carta in enumerate(dccartas.jugador.cartas):
+            print(f"[{index + 1}] {carta.nombre}")
+        print("-" * 20)
+        print(f"Colección:")
+        for index, carta in enumerate(dccartas.jugador.coleccion):
+            print(f"[{index + 1}] {carta.nombre}")
+        print()
+        print("[1] Pasar cartas de colección al mazo")
+        print("[2] Reordenar mazo")
+        print("[3] Sacar cartas del mazo a colección")
+        print("[0] Volver al Menú Principal")
+        print()
+        index = input("Indique su opción: ")
+
+        if index == "0":
+            return
+        elif index == "1":
+            print("Pasar cartas de colección al mazo")
+        elif index == "2":
+            print("Reordenar mazo")
+        elif index == "3":
+            print("Sacar cartas del mazo a colección")
         else:
             print("Seleccione una opción válida!")
 
