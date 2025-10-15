@@ -125,10 +125,10 @@ def menu_inventario(dccartas):
         for i, carta in enumerate(dccartas.jugador.coleccion):
             print(f"[{i + 1}] {carta.nombre}")
         print()
-        print("[1] Pasar cartas de colección al mazo")
+        print("[1] Pasar cartas al mazo desde colección")
         print("[2] Reordenar mazo")
         print("[3] Sacar cartas del mazo a colección")
-        print("[0] Volver al Menú Principal")
+        print("[0] Volver al Menú Principal\n")
         print()
         index = input("Indique su opción: ")
 
@@ -136,6 +136,7 @@ def menu_inventario(dccartas):
             return
         elif index == "1":
             print("Pasar cartas de colección al mazo")
+            menu_agregar_cartas(dccartas)
         elif index == "2":
             print("Reordenar mazo")
         elif index == "3":
@@ -144,12 +145,10 @@ def menu_inventario(dccartas):
             print("Seleccione una opción válida!")
 
 def menu_sacar_cartas(dccartas):
-    if len(dccartas.jugador.cartas) == 1:
-        print("Debes tener al menos una carta en el mazo.")
-        return
-    # Selección de cartas por parte del usuario
-    # cartas_seleccionadas: List[Carta] = []
     while True:
+        if len(dccartas.jugador.cartas) == 1:
+            print("Debes tener al menos una carta en el mazo.")
+            return
         print("-" * 30)
         print("Sacar cartas del mazo a colección".center(30, " "))
         print("-" * 30)
@@ -158,7 +157,7 @@ def menu_sacar_cartas(dccartas):
         #     f"{[carta.nombre for carta in cartas_seleccionadas]}")
         for i, carta in enumerate(dccartas.jugador.cartas):
             print(f"[{i + 1}] {carta.nombre}")
-        print("[0] Volver al Menú Inventario")
+        print("[0] Volver al Menú Inventario\n")
 
         index = input(f"Seleccione el índice de la carta a sacar del mazo: ")
         # Chequeo que ingrese un número
@@ -171,6 +170,41 @@ def menu_sacar_cartas(dccartas):
         # Si elige una carta válida, la agrega a las seleccionada
         elif 0 < int(index) < len(dccartas.jugador.cartas) + 1:
             dccartas.jugador.coleccion.append(dccartas.jugador.cartas.pop(int(index) - 1))
+        else:
+            print("Seleccione una opción válida!")
+
+def menu_agregar_cartas(dccartas):
+    while True: 
+        if len(dccartas.jugador.coleccion) == 0:
+            print("Debes tener al menos una carta en la colección.")
+            return
+        print("-" * 30)
+        print("Agregar cartas al mazo desde colección".center(30, " "))
+        print("-" * 30)
+        print()
+        # print(f"Cartas a sacar: ({len(cartas_seleccionadas)}) "
+        #     f"{[carta.nombre for carta in cartas_seleccionadas]}")
+        for i, carta in enumerate(dccartas.jugador.coleccion):
+            print(f"[{i + 1}] {carta.nombre}")
+        print("[0] Volver al Menú Inventario\n")
+
+        index = input(f"Seleccione el índice de la carta a agregar al mazo: ")
+        # Chequeo que ingrese un número
+        if not index.isdigit():
+            print("Seleccione una opción válida!")
+        # Si elige la última opción (avanzar al menú principal)
+        elif int(index) == 0:
+            print("Volviendo al Menú Inventario...")
+            return
+        # Si elige una carta válida, la agrega a las seleccionada
+        elif 0 < int(index) < len(dccartas.jugador.coleccion) + 1:
+            # Chequeo que no exceda el límite de cartas en el mazo
+            success = dccartas.jugador.agregar_carta(
+                dccartas.jugador.coleccion[int(index) - 1]
+            )
+            # Si no excede, la agrega al mazo y la saca de la colección
+            if success:
+                dccartas.jugador.coleccion.pop(int(index) - 1)
         else:
             print("Seleccione una opción válida!")
 
