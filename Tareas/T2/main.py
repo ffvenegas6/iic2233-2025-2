@@ -135,10 +135,9 @@ def menu_inventario(dccartas):
         if index == "0":
             return
         elif index == "1":
-            print("Pasar cartas de colección al mazo")
             menu_agregar_cartas(dccartas)
         elif index == "2":
-            print("Reordenar mazo")
+            menu_ordenar_cartas(dccartas)
         elif index == "3":
             menu_sacar_cartas(dccartas)
         else:
@@ -207,6 +206,40 @@ def menu_agregar_cartas(dccartas):
                 dccartas.jugador.coleccion.pop(int(index) - 1)
         else:
             print("Seleccione una opción válida!")
+
+def menu_ordenar_cartas(dccartas):
+    nuevo_mazo: List[Carta] = []
+    largo_mazo = len(dccartas.jugador.cartas)
+    while len(nuevo_mazo) < largo_mazo:
+        print("-" * 30)
+        print("Ordenar cartas en el mazo".center(30, " "))
+        print("-" * 30)
+        print()
+        print("Nuevo mazo:")
+        for i, carta in enumerate(nuevo_mazo):
+            print(f"[{i + 1}] {carta.nombre}")
+        print()
+        print("Mazo actual:")
+        for i, carta in enumerate(dccartas.jugador.cartas):
+            print(f"[{i + 1}] {carta.nombre}")
+        print("[0] Volver al Menú Inventario\n")
+
+        index = input(f"Seleccione el índice de la siguiente carta en el nuevo mazo: ")
+        # Chequeo que ingrese un número
+        if not index.isdigit():
+            print("Seleccione una opción válida!")
+        # Si elige la última opción (avanzar al menú principal)
+        elif int(index) == 0:
+            print("Volviendo al Menú Inventario...")
+            return
+        # Si elige una carta válida, la agrega a las seleccionada
+        elif 0 < int(index) < len(dccartas.jugador.cartas) + 1:
+            nuevo_mazo.append(dccartas.jugador.cartas[int(index) - 1])
+            dccartas.jugador.cartas.pop(int(index) - 1)
+        else:
+            print("Seleccione una opción válida!")
+    dccartas.jugador.cartas = nuevo_mazo
+    print("Mazo reordenado exitosamente!")
 
 if __name__ == "__main__":
     ejecucion()
