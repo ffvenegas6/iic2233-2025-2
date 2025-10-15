@@ -15,10 +15,10 @@ class Jugador:
     
     @cartas.setter
     def cartas(self, nuevas_cartas: List[Carta]):
-        if len(self.cartas) + len(nuevas_cartas) <= 5:
+        if len(nuevas_cartas) <= 5:
             self.__cartas.extend(nuevas_cartas)
         else:
-            print("No se pueden agregar más cartas. El límite es 5.")
+            print("El límite de cartas en el mazo es de 5.")
 
 
     def atacar(self, ia):
