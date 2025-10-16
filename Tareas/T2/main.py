@@ -79,7 +79,7 @@ def menu_principal(dccartas):
         print("-" * 30)
         print(f"Dinero disponible: {dccartas.jugador.oro}G")
         print(f"Ronda actual: {dccartas.ronda}")
-        print(f"IA Enemiga: {dccartas.ia_actual.nombre if dccartas.ia_actual else 'Ninguna'}")
+        print(f"IA Enemiga: {dccartas.ia_actual if dccartas.ia_actual else 'Ninguna'}")
         print()
         print("[1] Entrar en combate")
         print("[2] Inventario (gestionar mazo)")
@@ -95,6 +95,7 @@ def menu_principal(dccartas):
             sys.exit(0)
         elif index == "1":
             print("Combate")
+            dccartas.combate()
         elif index == "2":
             menu_inventario(dccartas)
         elif index == "3":

@@ -39,6 +39,7 @@ class IA():
         danio_recibido = int(danio * mult_defensa)
         self.vida -= danio_recibido
         print(f"Para {tipo}, el multiplicador de defensa de {self.nombre} es {mult_defensa}.")
+        print(f"Se recibe {danio_recibido} de daño. Vida restante: {self.vida}/{self.vida_max} HP.\n")
         return danio_recibido
     
     def atacar(self, jugador) -> int:

@@ -46,7 +46,12 @@ class Jugador:
         cartas_ataque = [
             carta for carta in self.cartas if carta.tipo in ["tropa", "mixta"]
         ]
+        if cartas_ataque:
+            print("Cartas de ataque del jugador:")
+            print(f"{[carta.nombre for carta in cartas_ataque]}\n")
         for carta in cartas_ataque:
+            if ia.vida <= 0:
+                break
             carta.atacar(ia)
             # carta.usar_habilidad_especial()
     
@@ -61,6 +66,7 @@ class Jugador:
         # Cada carta de ataque recibe todo el daño si no hay cartas de defensa
         if not cartas_defensa:
             print("El jugador no tiene cartas de defensa. Cartas de ataque reciben todo el daño.")
+            print(f"Cartas de ataque: {[carta.nombre for carta in cartas_tropa]}")
             for carta in cartas_tropa:
                 mult_ataque_ia = mult_dict.get(carta.tipo).get("mult_ataque")
                 danio_recibido = int(danio * mult_ataque_ia)
@@ -70,11 +76,11 @@ class Jugador:
         
         else:
             print("El jugador tiene cartas de defensa. Distribuyendo daño entre cartas de defensa.")
+            print(f"Cartas de defensa: {[carta.nombre for carta in cartas_defensa]}\n")
             for carta in cartas_defensa:
                 mult_ataque_ia = mult_dict.get(carta.tipo).get("mult_ataque")
                 danio_recibido = int(danio * mult_ataque_ia)
                 danio_ef = danio_recibido / len(cartas_defensa)
-                print(f"{carta.nombre} ha recibido {danio} de daño.")
-                print(f"Para {carta.tipo}, el multiplicador de ataque de la IA es {mult_ataque_ia}.")
+                print(f"{carta.nombre} es {carta.tipo}, por lo que el multiplicador de ataque de la IA es {mult_ataque_ia}.")
                 print(f"Distribuyendo el daño, se recibe: {danio_ef}.")
                 carta.recibir_danio(danio_ef)

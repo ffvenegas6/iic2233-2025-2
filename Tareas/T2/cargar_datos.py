@@ -23,8 +23,8 @@ def cargar_cartas(archivo_cartas):
                     prob_especial=float(carta[5]),
                     habilidad_especial=carta[8],
                 )
-                instancia_carta.ataque=int(carta[6]),
-                instancia_carta.mult_ataque=float(carta[7]),
+                instancia_carta.ataque=int(carta[6])
+                instancia_carta.mult_ataque=float(carta[7])
             elif carta[1] == "estructura":
                 instancia_carta = CartaEstructura(
                     nombre=carta[0],

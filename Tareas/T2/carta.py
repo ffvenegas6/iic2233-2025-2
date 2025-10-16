@@ -32,10 +32,11 @@ class Carta():
             self.__vida = nueva_vida
 
     def recibir_danio(self, danio_ia: int) -> int:
-        danio_recibido = int(danio_ia * self.mult_defensa)
+        danio_recibido = int(danio_ia / self.mult_defensa)
         self.vida -= danio_recibido
-        print(f"{self.nombre} ha recibido {danio_recibido} de daño.")
-        print(f"Le queda {self.vida} / {self.vida_max} HP")
+        print(f"{self.nombre} ha recibido {danio_recibido} de daño. "
+              f"(Daño base: {danio_ia}, multiplicador de defensa: x{self.mult_defensa})")
+        print(f"Le queda {self.vida}/{self.vida_max} HP\n")
         return danio_recibido
 
     def usar_habilidad_especial(self) -> None:
@@ -48,6 +49,7 @@ class Carta():
                 f"Habilidad especial: {self.habilidad_especial}")
 
 
+
 class CartaTropa(Carta):
     
     def __init__(self, *args, **kwargs):
@@ -57,7 +59,8 @@ class CartaTropa(Carta):
 
     def atacar(self, ia) -> int:
         danio_realizado = int(self.ataque * self.mult_ataque)
-        print(f"{self.nombre} ataca a {ia.nombre} con {danio_realizado} de daño.")
+        print(f"{self.nombre} ataca a {ia.nombre} con {danio_realizado} de daño. "
+              f"(Daño base: {self.ataque}, multiplicador de ataque: x{self.mult_ataque})\n")
         ia.recibir_danio(danio_realizado, self.tipo)
         return danio_realizado
 
@@ -65,6 +68,10 @@ class CartaTropa(Carta):
         """Implementar la habilidad especial de la tropa."""
         pass
 
+    def __str__(self) -> str:
+        return (f"{self.nombre} ({self.tipo}): {self.vida}/{self.vida_max} HP\n"
+                f"Ataque: {self.ataque} (x{self.mult_ataque})\n"
+                f"Habilidad especial: {self.habilidad_especial}")
 
 class CartaEstructura(Carta):
     

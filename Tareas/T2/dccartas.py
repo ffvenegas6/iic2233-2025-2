@@ -14,7 +14,7 @@ class DCCartas():
         return self.jugador.vivo and self.ia_actual is not None
 
     def combate(self):
-        print(f"--- Ronda {self.ronda} ---")
+        print(f"--- Ronda {self.ronda} ---\n")
     
         # Determinar orden de ataque
         primer_atacante, segundo_atacante = self._determinar_orden_ataque()
@@ -37,11 +37,14 @@ class DCCartas():
 
     def _determinar_orden_ataque(self):
         """Determina quién ataca primero basado en velocidad"""
+        print("Determinando orden de ataque...")
+        print(f"Velocidad {self.jugador.nombre}: {self.jugador.velocidad}")
+        print(f"Velocidad {self.ia_actual.nombre}: {self.ia_actual.velocidad}")
         if self.jugador.velocidad >= self.ia_actual.velocidad:
-            print(f"{self.jugador.nombre} ataca primero (velocidad: {self.jugador.velocidad}).")
+            print(f"{self.jugador.nombre} ataca primero\n")
             return self.jugador, self.ia_actual
         else:
-            print(f"{self.ia_actual.nombre} ataca primero (velocidad: {self.ia_actual.velocidad}).")
+            print(f"{self.ia_actual.nombre} ataca primero\n")
             return self.ia_actual, self.jugador
 
     def _ejecutar_ataque(self, atacante, objetivo) -> bool:
