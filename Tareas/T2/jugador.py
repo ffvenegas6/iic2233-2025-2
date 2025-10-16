@@ -1,5 +1,6 @@
 from typing import List
 from carta import Carta
+import random
 
 class Jugador:
 
@@ -8,6 +9,17 @@ class Jugador:
         self.__cartas: List[Carta] = []
         self.coleccion: List[Carta] = []
         self.oro: int = 0
+
+    @property
+    def vivo(self) -> bool:
+        for carta in self.cartas:
+            if carta.vida > 0:
+                return True
+        return False
+
+    @property
+    def velocidad(self):
+        return round(random.uniform(0.0, 1.0), 1) 
 
     @property
     def cartas(self):
