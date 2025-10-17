@@ -8,7 +8,9 @@ class Jugador:
         self.nombre: str = nombre
         self.__cartas: List[Carta] = []
         self.coleccion: List[Carta] = []
+        self.cementerio: List[Carta] = []
         self.oro: int = 0
+        self.velocidad: float = 0.0
 
     @property
     def vivo(self) -> bool:
@@ -17,9 +19,6 @@ class Jugador:
                 return True
         return False
 
-    @property
-    def velocidad(self):
-        return round(random.uniform(0.0, 1.0), 1) 
 
     @property
     def cartas(self):
@@ -28,7 +27,7 @@ class Jugador:
     @cartas.setter
     def cartas(self, nuevas_cartas: List[Carta]) -> bool:
         if len(nuevas_cartas) <= 5:
-            self.__cartas.extend(nuevas_cartas)
+            self.__cartas = nuevas_cartas
             return True
         else:
             print("El límite de cartas en el mazo es de 5.")
@@ -84,3 +83,7 @@ class Jugador:
                 print(f"{carta.nombre} es {carta.tipo}, por lo que el multiplicador de ataque de la IA es {mult_ataque_ia}.")
                 print(f"Distribuyendo el daño, se recibe: {danio_ef}.")
                 carta.recibir_danio(danio_ef)
+        for carta in self.cartas:
+            if carta.vida <= 0:
+                self.cementerio.append(carta)
+        self.cartas = [carta for carta in self.cartas if carta.vida > 0]
