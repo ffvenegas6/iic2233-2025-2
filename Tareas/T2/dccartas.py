@@ -1,3 +1,4 @@
+import random
 from constants import ORO_POR_RONDA, ORO_POR_VICTORIA
 
 class DCCartas():
@@ -38,6 +39,7 @@ class DCCartas():
     def _determinar_orden_ataque(self):
         """Determina quién ataca primero basado en velocidad"""
         print("Determinando orden de ataque...")
+        self.jugador.velocidad = round(random.uniform(0.0, 1.0), 1)
         print(f"Velocidad {self.jugador.nombre}: {self.jugador.velocidad}")
         print(f"Velocidad {self.ia_actual.nombre}: {self.ia_actual.velocidad}")
         if self.jugador.velocidad >= self.ia_actual.velocidad:
