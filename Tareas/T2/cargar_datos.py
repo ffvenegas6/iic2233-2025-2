@@ -67,13 +67,13 @@ def cargar_ias(archivo_ias, mult_dict):
         datos_ias = csv.DictReader(f)
         for ia in datos_ias:
             nombre = ia["nombre"]
-            mult_dict = mult_dict.get(nombre)
+            multiplicadores = mult_dict.get(nombre)
             instancia_ia = IA(
                 nombre=nombre,
                 vida_max=int(ia["vida_maxima"]),
                 ataque=int(ia["ataque"]),
                 descripcion=ia["descripcion"],
-                mult_dict=mult_dict,
+                mult_dict=multiplicadores,
                 prob_especial=float(ia["probabilidad_especial"]),
                 velocidad=float(ia["velocidad"]),
             )
