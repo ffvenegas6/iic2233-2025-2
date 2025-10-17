@@ -36,7 +36,10 @@ class Carta():
         self.vida -= danio_recibido
         print(f"{self.nombre} ha recibido {danio_recibido} de daño. "
               f"(Daño base: {danio_ia}, multiplicador de defensa: x{self.mult_defensa})")
-        print(f"Le queda {self.vida}/{self.vida_max} HP\n")
+        if self.vida <= 0:
+            print(f"{self.nombre} ha sido destruida.")
+        else:
+            print(f"Le queda {self.vida}/{self.vida_max} HP\n")
         return danio_recibido
 
     def usar_habilidad_especial(self) -> None:

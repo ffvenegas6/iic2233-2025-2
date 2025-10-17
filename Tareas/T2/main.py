@@ -8,7 +8,10 @@ from carta import Carta
 from dccartas import DCCartas
 from cargar_datos import cargar_cartas, cargar_multiplicadores, cargar_ias
 from constants import (
-    DINERO_INICIAL
+    DINERO_INICIAL,
+    COSTO_REROLL,
+    COSTO_CURAR,
+    COSTO_REVIVIR,
 )
 
 def ejecucion():
@@ -94,15 +97,21 @@ def menu_principal(dccartas):
             print("Hasta pronto!")
             sys.exit(0)
         elif index == "1":
-            print("Combate")
             dccartas.combate()
         elif index == "2":
             menu_inventario(dccartas)
         elif index == "3":
-            print("Tienda")
+            menu_tienda(dccartas)
         elif index == "4":
+            print("Mazo:")
             print("-" * 20)
             for index, carta in enumerate(dccartas.jugador.cartas):
+                print(f"[{index + 1}] {carta}")
+                print("-" * 20)
+            print()
+            print("Colección:")
+            print("-" * 20)
+            for index, carta in enumerate(dccartas.jugador.coleccion):
                 print(f"[{index + 1}] {carta}")
                 print("-" * 20)
         elif index == "5":
@@ -110,6 +119,129 @@ def menu_principal(dccartas):
             print(dccartas.ia_actual)
         else:
             print("Seleccione una opción válida!")
+
+def menu_tienda(dccartas):
+    random_n = random.randint(3, 5)
+    random_cartas = random.sample(
+        list(
+            set(dccartas.pool_cartas)
+            - set(dccartas.jugador.coleccion)
+            - set(dccartas.jugador.cartas)
+        ),
+        random_n,
+    )
+    while True:
+        print()
+        print("-" * 30)
+        print("TIENDA".center(30, " "))
+        print("-" * 30)
+        for i, carta in enumerate(random_cartas):
+            print(f"[{i + 1}] {carta.nombre} - Precio: {carta.precio}G")
+        print()
+        print(f"[{i + 2}] Curar carta (costo: {COSTO_CURAR}G)")
+        print(f"[{i + 3}] Revivir carta del cementerio")
+        print(f"[{i + 4}] Reroll del catálogo (costo: {COSTO_REROLL}G)")
+        print("[0] Volver al Menú Principal\n")
+        print()
+        index = input("Indique su opción: ")
+
+        if not index.isdigit():
+            print("Seleccione una opción válida!")
+        elif index == "0":
+            print("Volviendo al Menú Principal...\n")
+            return
+        elif index == str(len(random_cartas) + 1):
+            menu_curar_carta(dccartas)  
+        # Revivir carta
+        elif index == str(len(random_cartas) + 2):
+            menu_revivir_carta(dccartas)
+        # Reroll catálogo
+        elif index == str(len(random_cartas) + 3):
+            random_cartas = reroll_catalogo(dccartas, random_cartas)
+        # Comprar carta
+        elif 0 < int(index) < len(random_cartas) + 1:   
+            carta_seleccionada = random_cartas[int(index) - 1]
+            if dccartas.jugador.oro >= carta_seleccionada.precio:
+                dccartas.jugador.coleccion.append(carta_seleccionada)
+                dccartas.jugador.oro -= carta_seleccionada.precio
+                random_cartas.pop(int(index) - 1)
+                print(f"Has comprado {carta_seleccionada.nombre} por "
+                    f"{carta_seleccionada.precio}G")
+            else:
+                print("No tienes suficiente oro para comprar esta carta.\n")
+        else:
+            print("Seleccione una opción válida!\n")
+
+def menu_curar_carta(dccartas):
+    while True:
+        print("Curar carta")
+        cartas_a_curar = [
+            carta for carta in dccartas.jugador.cartas if carta.vida < carta.vida_max
+        ]
+        if not cartas_a_curar:
+            print("Todas tus cartas están al máximo de vida.\n")
+            return
+        for i, carta in enumerate(cartas_a_curar):
+            print(f"[{i + 1}] {carta.nombre} - Vida: {carta.vida}/{carta.vida_max}HP")
+        print("[0] Volver al Menú Tienda\n")
+        index_carta = input("Seleccione la carta a curar: ")
+        if not index_carta.isdigit():
+            print("Seleccione una opción válida!\n")
+        elif int(index_carta) == 0:
+            print("Volviendo al Menú Tienda...\n")
+            return
+        elif 0 < int(index_carta) < len(dccartas.jugador.cartas) + 1:
+            if dccartas.jugador.oro < COSTO_CURAR:
+                print("No tienes suficiente oro para curar una carta.")
+                continue
+            carta_a_curar = cartas_a_curar[int(index_carta) - 1]
+            carta_a_curar.vida = carta_a_curar.vida_max
+            print(f"{carta_a_curar.nombre} ha sido curada a {carta_a_curar.vida}/{carta_a_curar.vida_max}HP")
+            print(f"Has gastado {COSTO_CURAR}G en curar la carta.")
+            dccartas.jugador.oro -= COSTO_CURAR
+            print(f"Dinero restante: {dccartas.jugador.oro}G\n")
+        else:
+            print("Seleccione una opción válida!\n")
+
+def menu_revivir_carta(dccartas):
+    while True:
+        if not dccartas.jugador.cementerio:
+            print("No tienes cartas en el cementerio para revivir.\n")
+            return
+        for i, carta in enumerate(dccartas.jugador.cementerio):
+            print(f"[{i + 1}] {carta.nombre} - Vida: {carta.vida}/{carta.vida_max}HP")
+        print("[0] Volver al Menú Tienda\n")
+        index_carta = input("Seleccione la carta a revivir: ")
+        if not index_carta.isdigit():
+            print("Seleccione una opción válida!\n")
+        elif int(index_carta) == 0:
+            print("Volviendo al Menú Tienda...\n")
+            return
+        elif 0 < int(index_carta) < len(dccartas.jugador.cementerio) + 1:
+            if dccartas.jugador.oro < COSTO_REVIVIR:
+                print("No tienes suficiente oro para revivir una carta.\n")
+                return
+            dccartas.jugador.oro -= COSTO_REVIVIR
+            print(f"Has gastado {COSTO_REVIVIR}G en revivir la carta.")
+            print(f"Dinero restante: {dccartas.jugador.oro}G\n")
+            carta_a_revivir = dccartas.jugador.cementerio.pop(int(index_carta) - 1)
+            carta_a_revivir.vida = carta_a_revivir.vida_max
+            dccartas.jugador.coleccion.append(carta_a_revivir)
+            print(f"{carta_a_revivir.nombre} ha sido revivida y añadida a tu colección con "
+                    f"{carta_a_revivir.vida}/{carta_a_revivir.vida_max}HP\n")
+        else:
+            print("Seleccione una opción válida!\n")
+
+def reroll_catalogo(dccartas, random_cartas):
+    if dccartas.jugador.oro < COSTO_REROLL:
+        print("No tienes suficiente oro para hacer un reroll.\n")
+        return random_cartas
+    random_n = random.randint(3, 5)
+    random_cartas = random.sample(dccartas.pool_cartas, random_n)
+    dccartas.jugador.oro -= COSTO_REROLL
+    print(f"Has gastado {COSTO_REROLL}G en un reroll.")
+    print(f"Dinero restante: {dccartas.jugador.oro}G\n")
+    return random_cartas
 
 def menu_inventario(dccartas):
     while True:
